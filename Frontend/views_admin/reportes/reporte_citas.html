@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verificación Puebla</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/Frontend/css/estilos.css">
+  <!-- Agregar Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    /* Estilos para los dropdowns */
+    .dropdown-menu {
+      display: block;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .dropdown:hover .dropdown-menu,
+    .dropdown-menu:hover {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Asegurar que el submenú del administrador no se salga de la pantalla */
+    .dropdown:last-child .dropdown-menu {
+      right: 0;
+      left: auto;
+    }
+  </style>
+</head>
+
+<body class="bg-white text-gray-800 min-h-screen flex flex-col">
+  <!-- Incluir header -->
+  <div id="header-container-admin"></div>
+
+  <!-- Contenido principal -->
+
+  <!-- Barra de Navegación Administrador -->
+  <section class="bg-[#f5f5f5] mt-4 py-4 px-6 text-sm text-[#494848] font-medium">
+    <div class="flex gap-8 w-full">
+      <!-- Menús izquierda -->
+      <div class="flex gap-8">
+        <!-- Menú Horarios -->
+        <div class="dropdown relative">
+          <button class="dropdown-toggle flex items-center gap-1 hover:text-[#494848] text-3xl">
+            Horarios <i class="bi bi-chevron-down ml-1 sizebtn"></i>
+          </button>
+          <div class="dropdown-menu absolute bg-white text-[#494848] shadow-lg rounded mt-1 min-w-[160px] z-10">
+            <a href="/Frontend/views_admin/horario/cargar_horario.html" class="block px-4 py-2 hover:bg-gray-100">Cargar horarios</a>
+            <a href="/Frontend/views_admin/horario/modificar_horario.html" class="block px-4 py-2 hover:bg-gray-100">Modificar horario</a>
+          </div>
+        </div>
+
+        <!-- Menú Catalogos -->
+        <div class="dropdown relative">
+          <button class="dropdown-toggle flex items-center gap-1 hover:text-[#494848] text-3xl">
+            Catalogos
+            <i class="bi bi-chevron-down ml-1 sizebtn" ></i>
+          </button>
+          <div class="dropdown-menu absolute bg-white text-[#494848] shadow-lg rounded mt-1 min-w-[160px] z-10">
+            <a href="/Frontend/views_admin/catalogos/centro_verificacion.html" class="block px-4 py-2 hover:bg-gray-100">Centro de verificación</a>
+            <a href="/Frontend/views_admin/catalogos/requisito.html" class="block px-4 py-2 hover:bg-gray-100">Requisito</a>
+            <a href="/Frontend/views_admin/catalogos/tramite.html" class="block px-4 py-2 hover:bg-gray-100">Tramite</a>
+          </div>
+        </div>
+
+        <!-- Menú Reportes -->
+        <div class="dropdown relative">
+          <button class="dropdown-toggle flex items-center gap-1 hover:text-[#494848] text-3xl">
+            Reportes
+            <i class="bi bi-chevron-down ml-1 sizebtn"></i>
+          </button>
+          <div class="dropdown-menu absolute bg-white text-[#494848] shadow-lg rounded mt-1 min-w-[160px] z-10">
+            <a href="/Frontend/views_admin/reportes/grafico.html" class="block px-4 py-2 hover:bg-gray-100">Gráfica</a>
+            <a href="/Frontend/views_admin/reportes/reporte_citas.html" class="block px-4 py-2 hover:bg-gray-100">Reporte de citas</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menú Administrador a la derecha -->
+      <div class="dropdown relative ml-auto">
+        <button class="dropdown-toggle flex items-center gap-1 hover:text-[#494848] text-3xl">
+          <i class="bi bi-person-circle"></i>
+          Administrador
+          <i class="bi bi-chevron-down ml-1"></i>
+        </button>
+        <div class="dropdown-menu absolute right-0 bg-white text-[#494848] shadow-lg rounded mt-1 min-w-[160px] z-10">
+          <a href="#" class="block px-4 py-2 hover:bg-gray-100">Cambiar contraseña</a>
+          <a href="#" class="block px-4 py-2 hover:bg-gray-100">Cerrar sesión</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="flex-grow mt-4 px-6 text-base sm:text-lg">
+    <!-- Contenido principal aquí -->
+  </main>
+
+  <!-- Incluir footer -->
+  <div id="footer-container"></div>
+
+  <!-- Script para cargar los partials -->
+  <script>
+    // Función para cargar los partials
+    function loadPartials() {
+      // Cargar header
+      fetch('/Frontend/partials/header_admin.html')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('header-container-admin').innerHTML = data;
+        });
+
+      // Cargar footer
+      fetch('/Frontend/partials/footer.html')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('footer-container').innerHTML = data;
+        });
+    }
+
+    // Mejorar la interacción de los dropdowns
+    document.addEventListener('DOMContentLoaded', function() {
+      const dropdowns = document.querySelectorAll('.dropdown');
+      
+      dropdowns.forEach(dropdown => {
+        const toggle = dropdown.querySelector('.dropdown-toggle');
+        const menu = dropdown.querySelector('.dropdown-menu');
+        let timeout;
+        
+        // Mostrar al hacer hover
+        dropdown.addEventListener('mouseenter', () => {
+          clearTimeout(timeout);
+          menu.style.opacity = '1';
+          menu.style.visibility = 'visible';
+        });
+        
+        // Ocultar con retraso al salir
+        dropdown.addEventListener('mouseleave', () => {
+          timeout = setTimeout(() => {
+            menu.style.opacity = '0';
+            menu.style.visibility = 'hidden';
+          }, 300); // 300ms de retraso
+        });
+        
+        // Cancelar el ocultamiento si el mouse entra al menú
+        menu.addEventListener('mouseenter', () => {
+          clearTimeout(timeout);
+        });
+        
+        // Ocultar al salir del menú
+        menu.addEventListener('mouseleave', () => {
+          timeout = setTimeout(() => {
+            menu.style.opacity = '0';
+            menu.style.visibility = 'hidden';
+          }, 200);
+        });
+      });
+    });
+
+    // Llamar a la función cuando se cargue la página
+    window.onload = loadPartials;
+  </script>
+</body>
+
+</html>
